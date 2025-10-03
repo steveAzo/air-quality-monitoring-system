@@ -20,10 +20,10 @@ app.add_middleware(
 def startup():
     Base.metadata.create_all(bind=engine)
     # start scheduler - run refresh_all_locations every 60 minutes
-    try:
-        start_scheduler(interval_minutes=60)
-    except Exception as e:
-        print("Scheduler failed to start:", e)
+    # try:
+    #     start_scheduler(interval_minutes=60)
+    # except Exception as e:
+    #     print("Scheduler failed to start:", e)
 
 # Include routers
 app.include_router(openaq_controller.router)

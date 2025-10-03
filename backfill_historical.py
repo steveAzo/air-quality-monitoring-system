@@ -98,10 +98,9 @@ def backfill_historical_pm25():
     """Backfill PM2.5 data for key locations"""
     # Add more locations here as needed
     key_locations = [
-        (3, "NMA - Nima"),
-        (9764, "US Diplomatic Post: Accra"), 
         (1236045, "Physics Department-UG-Accra"),
         # Add more locations here: (location_id, "Location Name")
+        (3025585, "Graphic Road")
         # (947129, "ARJWQ6WV"),
         # (947131, "AWJQ4MVT"),
         # (947135, "A7RWN47G"),
