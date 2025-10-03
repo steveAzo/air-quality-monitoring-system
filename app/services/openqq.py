@@ -7,7 +7,6 @@ load_dotenv()
 
 BASE = "https://api.openaq.org/v3"
 API_KEY = os.getenv("OPENAQ_API_KEY", None)
-print("API_KEY:", API_KEY)
 HEADERS = {"X-API-Key": API_KEY} if API_KEY else {}
 
 def fetch_locations(country: str = "GH", limit: int = 1000, page: int = 1) -> List[Dict[str, Any]]:
