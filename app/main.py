@@ -27,7 +27,7 @@ def startup():
 
 # Include routers
 app.include_router(openaq_controller.router)
-app.include_router(air_quality.router, prefix="/api")
+# app.include_router(air_quality.router, prefix="/api")
 app.include_router(weather.router, prefix="/api")
 app.include_router(model.router, prefix="/api")
 
