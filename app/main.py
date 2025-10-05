@@ -12,6 +12,7 @@ origins = [
     "http://localhost:5174", 
     "http://127.0.0.1:5174",
     "https://mframa-app.onrender.com/",
+    "https://mfram-web-app-955403074769.europe-west1.run.app/",
 ]
 
 app.add_middleware(
