@@ -172,7 +172,7 @@ def refresh_all_locations():
     finally:
         db.close()
 
-def start_scheduler(interval_minutes: int = 60):
+def start_scheduler(interval_minutes: int = 120):
     # Remove existing jobs if any
     scheduler.remove_all_jobs()
     # Schedule the refresh_all_locations job

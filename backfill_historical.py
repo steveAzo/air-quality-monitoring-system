@@ -96,67 +96,42 @@ def backfill_historical_measurements(sensor_id: int, location_id: int, days_back
 
 def backfill_historical_pm25():
     """Backfill PM2.5 data for key locations"""
-    # Add more locations here as needed
     key_locations = [
         (1236045, "Physics Department-UG-Accra"),
-        # Add more locations here: (location_id, "Location Name")
-        (3025585, "Graphic Road")
-        # (947129, "ARJWQ6WV"),
-        # (947131, "AWJQ4MVT"),
-        # (947135, "A7RWN47G"),
+        (3025585, "Graphic Road"),
     ]
     
     total_saved_all = 0
     
     for location_id, location_name in key_locations:
-        print(f"\nBackfilling {location_name} (ID: {location_id})")
+        print(f"\n🎯 Backfilling {location_name} (ID: {location_id})")
         
-        # Get PM2.5 sensors for this location
         sensors = get_pm25_sensors_for_location(location_id)
-        print(f"Found {len(sensors)} PM2.5 sensors for {location_name}")
+        print(f"   🔎 Found {len(sensors)} PM2.5 sensors in DB")
         
         if not sensors:
-            print(f"No PM2.5 sensors found for {location_name}")
+            print(f"   ⚠️ No PM2.5 sensors found for {location_name}.")
+            print("   👉 Did you run the locations/sensors backfill first?")
             continue
-            
+        
         location_saved = 0
-        for sensor in sensors:
+        for s in sensors:
+            print(f"   📡 Sensor {s.id}: {s.parameter_name} at {s.location_id}")
             saved = backfill_historical_measurements(
-                sensor_id=sensor.id, 
+                sensor_id=s.id,
                 location_id=location_id,
-                days_back=180  # 6 months - adjust as needed
+                days_back=180
             )
+            print(f"   ✅ Sensor {s.id}: {saved} measurements saved")
             location_saved += saved
         
-        print(f"{location_name}: {location_saved} measurements saved")
+        print(f"📊 {location_name}: {location_saved} total measurements saved")
         total_saved_all += location_saved
     
-    print(f"\n HISTORICAL BACKFILL COMPLETE!")
-    print(f"Total measurements saved: {total_saved_all}")
-    print(f"Locations processed: {len(key_locations)}")
+    print("\n🎉 HISTORICAL BACKFILL COMPLETE!")
+    print(f"   Total measurements saved: {total_saved_all}")
+    print(f"   Locations processed: {len(key_locations)}")
 
-def backfill_specific_location(location_id: int, location_name: str, days_back: int = 180):
-    """Backfill a specific location (useful for adding new locations)"""
-    print(f"\nBackfilling {location_name} (ID: {location_id})")
-    
-    sensors = get_pm25_sensors_for_location(location_id)
-    print(f" Found {len(sensors)} PM2.5 sensors for {location_name}")
-    
-    if not sensors:
-        print(f" No PM2.5 sensors found for {location_name}")
-        return 0
-    
-    total_saved = 0
-    for sensor in sensors:
-        saved = backfill_historical_measurements(
-            sensor_id=sensor.id, 
-            location_id=location_id,
-            days_back=days_back
-        )
-        total_saved += saved
-    
-    print(f"{location_name}: {total_saved} measurements saved")
-    return total_saved
 
 if __name__ == "__main__":
     # Run backfill for all key locations
