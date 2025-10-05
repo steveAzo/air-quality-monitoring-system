@@ -11,6 +11,7 @@ app = FastAPI(title="AirSafe Ghana API")
 origins = [
     "http://localhost:5174", 
     "http://127.0.0.1:5174",
+    "https://mframa-app.onrender.com/",
 ]
 
 app.add_middleware(
