@@ -19,7 +19,7 @@ def get_pm25_sensors_for_location(location_id: int):
     finally:
         db.close()
 
-def backfill_historical_measurements(sensor_id: int, location_id: int, days_back: int = 365):
+def backfill_historical_measurements(sensor_id: int, location_id: int, days_back: int = 15):
     """Backfill historical measurements for a specific sensor with corrected format"""
     db = SessionLocal()
     try:
