@@ -6,6 +6,7 @@ from app.crud import openaq as crud
 from app.schemas.openaq import LocationSchema, SensorSummary, MeasurementSchema
 from app.models.openaq import Measurement, Sensor, Location
 from datetime import datetime, timedelta
+from app.services.knowledgebase import AirQualityAssessor
 
 router = APIRouter(prefix="/openaq", tags=["OpenAQ"])
 
@@ -166,9 +167,14 @@ def get_location(location_id: int, db: Session = Depends(get_db)):
     }
 
 
+
 @router.get("/locations/{location_id}/latest")
-def get_location_latest(location_id: int, db: Session = Depends(get_db)):
-    """Get latest measurements for all sensors at a location"""
+def get_location_latest(
+    location_id: int, 
+    db: Session = Depends(get_db),
+    include_assessment: bool = Query(True, description="Include air quality assessment")
+):
+    """Get latest measurements for all sensors at a location with air quality assessment"""
     sensors = crud.get_sensors_by_location(db, location_id)
     
     latest_measurements = []
@@ -187,7 +193,20 @@ def get_location_latest(location_id: int, db: Session = Depends(get_db)):
                 "coordinates": latest.coordinates
             })
     
-    return {"location_id": location_id, "latest_measurements": latest_measurements}
+    # Build the response
+    response = {
+        "location_id": location_id,
+        "latest_measurements": latest_measurements,
+        "timestamp": datetime.utcnow().isoformat()  # Add current API response time
+    }
+    
+    # Add air quality assessment if requested and we have data
+    if include_assessment and latest_measurements:
+        assessor = AirQualityAssessor()
+        air_quality_assessment = assessor.assess_overall_air_quality(latest_measurements)
+        response["air_quality_assessment"] = air_quality_assessment
+    
+    return response
 
 
 @router.get("/sensors/{sensor_id}/measurements", response_model=List[MeasurementSchema])
